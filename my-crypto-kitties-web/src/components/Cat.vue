@@ -1,16 +1,47 @@
 <template>
   <div class="cat">
     <div class="ears">
-      <div class="ear ear-left"></div>
-      <div class="ear ear-right"></div>
+      <div class="ear ear-left">
+        <div class="earlobe"></div>
+      </div>
+      <div class="ear ear-right">
+        <div class="earlobe"></div>
+      </div>
     </div>
     <div class="body">
       <div class="eyes">
         <div class="eye">
-          <div class="pupils"></div>
+          <div class="pupils">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+          </div>
         </div>
         <div class="eye">
-          <div class="pupils"></div>
+          <div class="pupils">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mouth">
+        <div class="nose">
+          <div class="up"></div>
+          <div class="down">
+            <div class="left"></div>
+            <div class="right"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mustache">
+        <div class="left">
+          <div class="mustache1"></div>
+          <div class="mustache2"></div>
+          <div class="mustache3"></div>
+        </div>
+        <div class="right">
+          <div class="mustache1"></div>
+          <div class="mustache2"></div>
+          <div class="mustache3"></div>
         </div>
       </div>
     </div>
@@ -28,43 +59,60 @@ export default {
 
 <style lang="less" scoped>
   .cat {
+    margin-left: 100px;
+
     .ears {
       display: flex;
       justify-content: space-between;
-      width: 200px;
+      width: 230px;
       position: relative;
-      top: 70px;
+      top: 100px;
       z-index: -1;
 
       .ear {
-        background-color: #e58a46;
-        width: 80px;
-        height: 80px;
+        background-color: #f6b950;
+        width: 120px;
+        height: 120px;
 
         &.ear-left {
           border-radius: 0 90%;
+          .earlobe {
+            border-radius: 0 90%;
+          }
         }
         &.ear-right {
+          border-radius: 90% 0;
+        }
+
+        .earlobe {
+          position: relative;
+          top: 20px;
+          left: 18px;
+          width: 80px;
+          height: 80px;
+          background-color: #f38795;
           border-radius: 90% 0;
         }
       }
     }
 
     .body {
-      background-color: #d97930;
-      width: 200px;
+      background-color: #f6b950;
+      width: 230px;
       height: 200px;
       border-radius: 50%;
+      z-index: 5;
 
       .eyes {
         top: 50px;
         display: flex;
         justify-content: space-around;
         position: relative;
+        z-index: 10;
 
         .eye {
-          width: 50px;
-          height: 40px;
+          width: 42px;
+          height: 39px;
           background-color: #ffffff;
           border-radius: 50%;
 
@@ -73,10 +121,90 @@ export default {
             height: 34px;
             position: relative;
             top: 3px;
-            left: 8px;
-            background-color: black;
+            left: 3px;
+            background-color: #403e3e;
             border-radius: 50%;
+
+            .dot1, .dot2 {
+              position: relative;
+              background-color: #ffffff;
+              border-radius: 50%;
+            }
+
+            .dot1 {
+              top: 5px;
+              left: 5px;
+              width: 12px;
+              height: 12px;
+            }
+
+            .dot2 {
+              top: 7px;
+              left: 5px;
+              width: 7px;
+              height: 7px;
+            }
           }
+        }
+      }
+      .mouth {
+        position: relative;
+        top: 35px;
+        left: 15px;
+        width: 200px;
+        height: 100px;
+        background-color: #ffe4c8;
+        border-radius: 60%;
+
+        .nose {
+          position: relative;
+          top: 30px;
+          left: 80px;
+          z-index: 15;
+          .down {
+            display: flex;
+            div {
+              display: block;
+              height: 15px;
+              width: 15px;
+              border-radius: 50%;
+              border: 3px solid #403e3e;
+              border-left: 3px solid #ffe4c8;
+              border-top: 3px solid #ffe4c8;
+              transform: rotate(45deg);
+            }
+          }
+        }
+      }
+      .mustache {
+        position: relative;
+        top: -90px;
+        left: -25px;
+        z-index: 10;
+        width: 280px;
+        display: flex;
+        justify-content: space-between;
+
+        >div {
+          >div {
+            width: 45px;
+            height: 5px;
+            margin: 15px 2px;
+            background-color: #403e3e;
+          }
+        }
+
+        .left .mustache1 {
+          transform: rotate(20deg);
+        }
+        .left .mustache3 {
+          transform: rotate(-20deg);
+        }
+        .right .mustache1 {
+          transform: rotate(-20deg);
+        }
+        .right .mustache3 {
+          transform: rotate(20deg);
         }
       }
     }
