@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <Cat />
+    <Cat dna="f6b950" />
   </div>
 </template>
 
