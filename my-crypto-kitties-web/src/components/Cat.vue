@@ -1,34 +1,34 @@
 <template>
   <div class="cat">
     <div class="ears">
-      <div class="ear ear-left" v-bind:style="{backgroundColor: bodyColor}">
+      <div class="ear ear-left" v-bind:style="{backgroundColor: color2}">
         <div class="earlobe"></div>
       </div>
-      <div class="ear ear-right" v-bind:style="{backgroundColor: bodyColor}">
+      <div class="ear ear-right" v-bind:style="{backgroundColor: color2}">
         <div class="earlobe"></div>
       </div>
     </div>
-    <div class="body" v-bind:style="{backgroundColor: bodyColor}">
+    <div class="body" v-bind:style="{backgroundColor: color1}">
       <div class="eyes">
         <div class="eye">
-          <div class="pupils">
+          <div class="pupils" v-bind:style="{backgroundColor: color3}">
             <div class="dot1"></div>
             <div class="dot2"></div>
           </div>
         </div>
         <div class="eye">
-          <div class="pupils">
+          <div class="pupils" v-bind:style="{backgroundColor: color3}">
             <div class="dot1"></div>
             <div class="dot2"></div>
           </div>
         </div>
       </div>
-      <div class="mouth">
+      <div class="mouth" v-bind:style="{backgroundColor: color4}">
         <div class="nose">
           <div class="up"></div>
           <div class="down">
-            <div class="left"></div>
-            <div class="right"></div>
+            <div class="left" v-bind:style="{borderTopColor: color4, borderLeftColor: color4}"></div>
+            <div class="right" v-bind:style="{borderTopColor: color4, borderLeftColor: color4}"></div>
           </div>
         </div>
       </div>
@@ -60,13 +60,19 @@ export default {
 
   beforeMount() {
     this.DNA = new DNA(this.dna);
-    this.bodyColor = this.DNA?.getBodyColor();
+    this.color1 = this.DNA?.getColor1();
+    this.color2 = this.DNA?.getColor2();
+    this.color3 = this.DNA?.getColor3();
+    this.color4 = this.DNA?.getColor4();
   },
 
   data() {
     return {
       DNA: null,
-      bodyColor: null,
+      color1: null,
+      color2: null,
+      color3: null,
+      color4: null,
     }
   }
 }
