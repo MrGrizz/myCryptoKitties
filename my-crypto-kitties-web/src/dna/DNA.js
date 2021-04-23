@@ -21,4 +21,18 @@ export class DNA {
         return '#' + this.dna.substring(18, 24);
     }
 
+    getColor5() {
+        return '#' + this.dna.substring(24, 30);
+    }
+
+    getCattribute1() {
+        let cattribute1 = parseInt(this.dna.substring(30, 31));
+
+        if (cattribute1 > 4) {
+            cattribute1 = -cattribute1 + 4;
+        }
+
+        return cattribute1 * 2;
+    }
+
 }

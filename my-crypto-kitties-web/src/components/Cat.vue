@@ -11,13 +11,13 @@
     <div class="body" v-bind:style="{backgroundColor: color1}">
       <div class="eyes">
         <div class="eye">
-          <div class="pupils" v-bind:style="{backgroundColor: color3}">
+          <div class="pupils" v-bind:style="{backgroundColor: color3, borderTop: pupilsBorderTop, borderBottom: pupilsBorderBottom}">
             <div class="dot1"></div>
             <div class="dot2"></div>
           </div>
         </div>
         <div class="eye">
-          <div class="pupils" v-bind:style="{backgroundColor: color3}">
+          <div class="pupils" v-bind:style="{backgroundColor: color3, borderTop: pupilsBorderTop, borderBottom: pupilsBorderBottom}">
             <div class="dot1"></div>
             <div class="dot2"></div>
           </div>
@@ -64,6 +64,12 @@ export default {
     this.color2 = this.DNA?.getColor2();
     this.color3 = this.DNA?.getColor3();
     this.color4 = this.DNA?.getColor4();
+
+    if (this.DNA?.getCattribute1() > 0) {
+      this.pupilsBorderTop = this.DNA?.getCattribute1() + 'px solid';
+    } else {
+      this.pupilsBorderBottom = -this.DNA?.getCattribute1() + 'px solid';
+    }
   },
 
   data() {
@@ -73,6 +79,8 @@ export default {
       color2: null,
       color3: null,
       color4: null,
+      pupilsBorderTop: '0px solid',
+      pupilsBorderBottom: '0px solid',
     }
   }
 }
