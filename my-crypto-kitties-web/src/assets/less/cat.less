@@ -145,3 +145,41 @@
     }
   }
 }
+
+@keyframes moveHead {
+  0% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(5deg);
+  }
+  60% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes moveHead2 {
+  0% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.movingHead {
+  animation: moveHead 3s infinite;
+}
+
+.movingHead2 {
+  animation: moveHead2 5s infinite;
+}

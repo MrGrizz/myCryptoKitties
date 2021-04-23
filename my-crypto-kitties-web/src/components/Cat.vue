@@ -8,7 +8,7 @@
         <div class="earlobe"></div>
       </div>
     </div>
-    <div class="body" v-bind:style="{backgroundColor: color1}">
+    <div class="body" :class="headAnimationClass" v-bind:style="{backgroundColor: color1}">
       <div class="eyes">
         <div class="eye">
           <div class="pupils" v-bind:style="{backgroundColor: color3, borderTop: pupilsBorderTop, borderBottom: pupilsBorderBottom}">
@@ -70,6 +70,15 @@ export default {
     } else {
       this.pupilsBorderBottom = -this.DNA?.getCattribute1() + 'px solid';
     }
+
+    switch (this.DNA?.getCattribute2()) {
+      case 1:
+        this.headAnimationClass = 'movingHead';
+        break;
+      case 2:
+        this.headAnimationClass = 'movingHead2';
+        break;
+    }
   },
 
   data() {
@@ -81,6 +90,7 @@ export default {
       color4: null,
       pupilsBorderTop: '0px solid',
       pupilsBorderBottom: '0px solid',
+      headAnimationClass: null,
     }
   }
 }

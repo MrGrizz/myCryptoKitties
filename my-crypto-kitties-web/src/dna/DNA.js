@@ -26,13 +26,19 @@ export class DNA {
     }
 
     getCattribute1() {
-        let cattribute1 = parseInt(this.dna.substring(30, 31));
+        let cattribute = parseInt(this.dna.substring(30, 31));
 
-        if (cattribute1 > 4) {
-            cattribute1 = -cattribute1 + 4;
+        if (cattribute > 4) {
+            cattribute = -cattribute + 4;
         }
 
-        return cattribute1 * 2;
+        return cattribute * 2;
+    }
+
+    getCattribute2() {
+        let cattribute = parseInt(this.dna.substring(31, 32));
+
+        return cattribute % 3;
     }
 
 }
