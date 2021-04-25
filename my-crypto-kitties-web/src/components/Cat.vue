@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import {DNA} from "../dna/DNA.js";
+import {DNA} from '../dna/DNA.js';
 
 export default {
   name: 'Cat',
@@ -58,27 +58,14 @@ export default {
     dna: String
   },
 
+  watch: {
+    dna: function() {
+      this.drawCat();
+    }
+  },
+
   beforeMount() {
-    this.DNA = new DNA(this.dna);
-    this.color1 = this.DNA?.getColor1();
-    this.color2 = this.DNA?.getColor2();
-    this.color3 = this.DNA?.getColor3();
-    this.color4 = this.DNA?.getColor4();
-
-    if (this.DNA?.getCattribute1() > 0) {
-      this.pupilsBorderTop = this.DNA?.getCattribute1() + 'px solid';
-    } else {
-      this.pupilsBorderBottom = -this.DNA?.getCattribute1() + 'px solid';
-    }
-
-    switch (this.DNA?.getCattribute2()) {
-      case 1:
-        this.headAnimationClass = 'movingHead';
-        break;
-      case 2:
-        this.headAnimationClass = 'movingHead2';
-        break;
-    }
+    this.drawCat();
   },
 
   data() {
@@ -91,6 +78,35 @@ export default {
       pupilsBorderTop: '0px solid',
       pupilsBorderBottom: '0px solid',
       headAnimationClass: null,
+    }
+  },
+
+  methods: {
+    drawCat() {
+      this.DNA = new DNA(this.dna);
+      this.color1 = this.DNA?.getColor1();
+      this.color2 = this.DNA?.getColor2();
+      this.color3 = this.DNA?.getColor3();
+      this.color4 = this.DNA?.getColor4();
+
+      if (this.DNA?.getCattribute1() > 0) {
+        this.pupilsBorderTop = this.DNA?.getCattribute1() + 'px solid';
+        this.pupilsBorderBottom = null;
+      } else {
+        this.pupilsBorderBottom = -this.DNA?.getCattribute1() + 'px solid';
+        this.pupilsBorderTop = null;
+      }
+
+      switch (this.DNA?.getCattribute2()) {
+        case 1:
+          this.headAnimationClass = 'movingHead';
+          break;
+        case 2:
+          this.headAnimationClass = 'movingHead2';
+          break;
+        default :
+          this.headAnimationClass = '';
+      }
     }
   }
 }

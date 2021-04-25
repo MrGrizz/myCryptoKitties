@@ -1,3 +1,4 @@
+import {sha256} from "js-sha256";
 
 export class DNA {
 
@@ -39,6 +40,18 @@ export class DNA {
         let cattribute = parseInt(this.dna.substring(31, 32));
 
         return cattribute % 3;
+    }
+
+    static getRandomCatDna() {
+        let dna = sha256(Date.now().toString()).substring(0, 30);
+        dna += this.getRandomNumber()
+        dna += this.getRandomNumber()
+
+        return dna;
+    }
+
+    static getRandomNumber() {
+        return Math.floor(Math.random() * 10);
     }
 
 }
