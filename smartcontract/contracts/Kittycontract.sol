@@ -47,8 +47,26 @@ contract Kittycontract is IERC721, Ownable {
         _transfer(msg.sender, to, tokenId);
     }
 
-    function createKittyGen0(string memory _dna) onlyOwner public {
-        _createKitty(_dna, 0, 0, 0, msg.sender);
+    function createKittyGen0(string memory dna) onlyOwner public returns(uint256) {
+        return _createKitty(dna, 0, 0, 0, msg.sender);
+    }
+
+    function getKitty(uint256 tokenId) view external returns (
+        string memory dna,
+        uint256 birthTime,
+        uint256 mumId,
+        uint256 dadId,
+        uint256 generation,
+        address owner) {
+
+        Kitty storage k = kitties[tokenId];
+
+        dna = k.dna;
+        birthTime = uint256(k.birthTime);
+        mumId = uint256(k.mumId);
+        dadId = uint256(k.dadId);
+        generation = uint256(k.generation);
+        owner = kittyOwner[tokenId];
     }
 
     function _createKitty(
