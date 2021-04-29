@@ -52,7 +52,9 @@ export default {
       window.ethereum.enable().then((accounts) => {
         this.user = accounts[0];
         this.instance = new this.web3.eth.Contract(Kittycontract.abi, Kittycontract.address, {from: this.user});
-        console.log(this.instance);
+        this.instance.events.Birth({}).on('data', (event) => {
+          console.log(event);
+        });
       });
     },
 

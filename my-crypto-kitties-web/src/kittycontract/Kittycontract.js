@@ -1,5 +1,5 @@
 export const Kittycontract = {
-    address: '0x04708b10b23A769f9FDED54838a0881315F0C636',
+    address: '0x357E0DF5d92D3247e5a852b3C7037827A1363509',
     abi: [
         {
             "anonymous": false,
