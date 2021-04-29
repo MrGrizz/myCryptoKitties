@@ -21,6 +21,8 @@ contract Kittycontract is IERC721, Ownable {
 
     mapping(uint256 => address) public kittyOwner;
     mapping(address => uint256) balances;
+    mapping(uint256 => address) approvals;
+    mapping(address => mapping(address => bool)) approvalsForAll;
 
     Kitty[] kitties;
 
@@ -45,6 +47,31 @@ contract Kittycontract is IERC721, Ownable {
         require(_owns(msg.sender, tokenId), "You don't own this token");
 
         _transfer(msg.sender, to, tokenId);
+    }
+
+    function approve(address _approved, uint256 _tokenId) override external {
+        require(_tokenId < kitties.length, "Token doesn't exist");
+        require(_owns(msg.sender, _tokenId) || approvalsForAll[kittyOwner[_tokenId]][msg.sender], "You don't own this token");
+
+        approvals[_tokenId] = _approved;
+
+        emit Approval(msg.sender, _approved, _tokenId);
+    }
+
+    function setApprovalForAll(address _operator, bool _approved) override external {
+        approvalsForAll[msg.sender][_operator] = _approved;
+
+        emit ApprovalForAll(msg.sender, _operator, _approved);
+    }
+
+    function getApproved(uint256 _tokenId) override external view returns (address) {
+        require(_tokenId < kitties.length, "Token doesn't exist");
+
+        return approvals[_tokenId];
+    }
+
+    function isApprovedForAll(address _owner, address _operator) override external view returns (bool) {
+        return approvalsForAll[_owner][_operator];
     }
 
     function createKittyGen0(string memory dna) onlyOwner public returns(uint256) {
