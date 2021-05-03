@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./IERC721.sol";
 import "./Ownable.sol";
+import "./IERC721Receiver.sol";
 
 contract Kittycontract is IERC721, Ownable {
 
@@ -49,30 +50,22 @@ contract Kittycontract is IERC721, Ownable {
         _transfer(msg.sender, to, tokenId);
     }
 
-    /// @notice Transfers the ownership of an NFT from one address to another address
-    /// @dev Throws unless `msg.sender` is the current owner, an authorized
-    ///  operator, or the approved address for this NFT. Throws if `_from` is
-    ///  not the current owner. Throws if `_to` is the zero address. Throws if
-    ///  `_tokenId` is not a valid NFT. When transfer is complete, this function
-    ///  checks if `_to` is a smart contract (code size > 0). If so, it calls
-    ///  `onERC721Received` on `_to` and throws if the return value is not
-    ///  `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`.
-    /// @param _from The current owner of the NFT
-    /// @param _to The new owner
-    /// @param _tokenId The NFT to transfer
-    /// @param data Additional data with no specified format, sent in call to `_to`
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata data) override external {
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory data) override external {
+        require(_tokenId < kitties.length, "Token doesn't exist");
+        require(_isApproved(msg.sender, _tokenId), "You are not authorize to transfer this token");
+        require(_owns(_from, _tokenId), "_from address isn't current owner");
+        require(_to != address(0), "_to address is 0 address");
 
+        _safeTransfer(_from, _to, _tokenId, data);
     }
 
-    /// @notice Transfers the ownership of an NFT from one address to another address
-    /// @dev This works identically to the other function with an extra data parameter,
-    ///  except this function just sets data to "".
-    /// @param _from The current owner of the NFT
-    /// @param _to The new owner
-    /// @param _tokenId The NFT to transfer
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) override external {
+        require(_tokenId < kitties.length, "Token doesn't exist");
+        require(_isApproved(msg.sender, _tokenId), "You are not authorize to transfer this token");
+        require(_owns(_from, _tokenId), "_from address isn't current owner");
+        require(_to != address(0), "_to address is 0 address");
 
+        _safeTransfer(_from, _to, _tokenId, "");
     }
 
     function transferFrom(address _from, address _to, uint256 _tokenId) override external {
@@ -81,7 +74,7 @@ contract Kittycontract is IERC721, Ownable {
         require(_owns(_from, _tokenId), "_from address isn't current owner");
         require(_to != address(0), "_to address is 0 address");
 
-        _transfer(_from, _to, _tokenId)
+        _transfer(_from, _to, _tokenId);
     }
 
     function approve(address _approved, uint256 _tokenId) override external {
@@ -158,6 +151,11 @@ contract Kittycontract is IERC721, Ownable {
         return kittyId;
     }
 
+    function _safeTransfer(address _from, address _to, uint256 _tokenId, bytes memory data) internal {
+        _transfer(_from, _to, _tokenId);
+        require(_checkAddress(_from, _to, _tokenId, data));
+    }
+
     function _transfer(address from, address to, uint256 tokenId) internal {
         kittyOwner[tokenId] = to;
         balances[to] += 1;
@@ -167,6 +165,26 @@ contract Kittycontract is IERC721, Ownable {
         }
 
         emit Transfer(msg.sender, to, tokenId);
+    }
+
+    function _checkAddress(address _from, address _to, uint256 _tokenId, bytes memory data) internal returns(bool) {
+        if (!_isSmartContract(_to)) {
+            return true;
+        }
+
+        IERC721Receiver receiver = IERC721Receiver(_to);
+        bytes4 result = receiver.onERC721Received(msg.sender, _from, _tokenId, data);
+
+        return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)")) == result;
+    }
+
+    function _isSmartContract(address _to) internal view returns(bool) {
+        uint code;
+        assembly {
+            code := extcodesize(_to)
+        }
+
+        return code > 0;
     }
 
     function _isApproved(address claimant, uint256 tokenId) internal view returns(bool) {
