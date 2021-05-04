@@ -133,6 +133,50 @@ contract Kittycontract is IERC721, Ownable {
         owner = kittyOwner[tokenId];
     }
 
+    function breed(uint256 dadId, uint256 mumId) external returns(uint256) {
+        require(_owns(msg.sender, dadId));
+        require(_owns(msg.sender, mumId));
+
+        string storage mumDna = kitties[mumId].dna;
+        string storage dadDna = kitties[dadId].dna;
+
+        string memory newDna = _mixDna(mumDna, dadDna);
+        uint256 generation = (kitties[mumId].generation + kitties[dadId].generation)/2;
+
+        return _createKitty(newDna, mumId, dadId, generation, msg.sender);
+    }
+
+    function _mixDna(string memory mumDna, string memory dadDna) internal pure returns(string memory) {
+        bytes memory mumDnaBytes = bytes(mumDna);
+        bytes memory dadDnaBytes = bytes(dadDna);
+        bytes memory result = new bytes(32);
+
+        for (uint i = 0; i < 6; i++) {
+            result[i] = mumDnaBytes[i];
+        }
+
+        for (uint i = 6; i < 12; i++) {
+            result[i] = dadDnaBytes[i];
+        }
+
+        for (uint i = 12; i < 18; i++) {
+            result[i] = dadDnaBytes[i];
+        }
+
+        for (uint i = 18; i < 24; i++) {
+            result[i] = dadDnaBytes[i];
+        }
+
+        for (uint i = 24; i < 30; i++) {
+            result[i] = mumDnaBytes[i];
+        }
+
+        result[30] = dadDnaBytes[30];
+        result[31] = mumDnaBytes[31];
+
+        return string(result);
+    }
+
     function _createKitty(
         string memory _dna,
         uint256 _mumId,
