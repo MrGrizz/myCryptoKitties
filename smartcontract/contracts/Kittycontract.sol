@@ -10,6 +10,9 @@ contract Kittycontract is IERC721, Ownable {
     string public constant override name = "MichalKitties";
     string public constant override symbol = "MKIT";
 
+    bytes4 internal constant _ERC721_INTERFACE_ID = 0x80ac58cd;
+    bytes4 internal constant _ERC165_INTERFACE_ID = 0x01ffc9a7;
+
     event Birth(address owner, uint256 mumId, uint256 dadId, string dna);
 
     struct Kitty {
@@ -26,6 +29,10 @@ contract Kittycontract is IERC721, Ownable {
     mapping(address => mapping(address => bool)) approvalsForAll;
 
     Kitty[] kitties;
+
+    function supportsInterface(bytes4 _interfaceId) external pure returns(bool) {
+        return _interfaceId == _ERC721_INTERFACE_ID || _interfaceId == _ERC165_INTERFACE_ID;
+    }
 
     function balanceOf(address owner) override external view returns (uint256 balance) {
         balance = balances[owner];
