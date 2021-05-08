@@ -1,17 +1,18 @@
 .cat {
-  margin-left: 100px;
+  height: 240px;
+  margin-top:10px;
 
   .ears {
     display: flex;
     justify-content: space-between;
     width: 230px;
     position: relative;
-    top: 100px;
     z-index: -1;
 
     .ear {
       width: 120px;
       height: 120px;
+      z-index: 1;
 
       &.ear-left {
         border-radius: 0 90%;
@@ -40,6 +41,8 @@
     height: 200px;
     border-radius: 50%;
     z-index: 5;
+    position: relative;
+    top: -100px;
 
     .eyes {
       top: 50px;
@@ -144,6 +147,12 @@
       }
     }
   }
+}
+
+.card-body {
+  z-index: 2;
+  display: flex;
+  justify-content: center;
 }
 
 @keyframes moveHead {
