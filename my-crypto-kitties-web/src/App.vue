@@ -13,6 +13,7 @@
         </ul>
         <div class="wallet">
           <span v-if="user" class="navbar-text">
+            Your balance: 50 <img src="./assets/ethereum-logo.png" width="20" height="24" />&nbsp;&nbsp;&nbsp;
             Connected! {{ user }}
           </span>
           <button v-else type="button" @click="connectWallet" class="btn btn-light">Connect Metamask</button>
@@ -27,13 +28,13 @@
       <div class="container">
         <div class="row">
           <div class="col-md-4">
-            <Cat ref="cat" :dna="dna" />
+            <Cat ref="cat" :cat="cat" />
           </div>
           <div class="col-md-4">
-            <Cat ref="cat" :dna="dna2" />
+            <Cat ref="cat" :cat="cat2" />
           </div>
           <div class="col-md-4">
-            <Cat ref="cat" :dna="dna3" />
+            <Cat ref="cat" :cat="cat3" />
           </div>
         </div>
       </div>
@@ -42,6 +43,20 @@
     </div>
     <div v-if="isMarketPlacePage">
       <h1>Marketplace</h1>
+      <br>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <Cat ref="cat" :cat="cat" :buy="true" />
+          </div>
+          <div class="col-md-4">
+            <Cat ref="cat" :cat="cat2" :buy="true" />
+          </div>
+          <div class="col-md-4">
+            <Cat ref="cat" :cat="cat3" :buy="true" />
+          </div>
+        </div>
+      </div>
       <br>
     </div>
   </div>
@@ -58,13 +73,28 @@ export default {
 
   data() {
     return {
-      dna: 'f6b950a6a930b48ad1ffe4c8c12a8b91',
-      dna2: 'a6b910a6a930b44ad1ca83c8a14a8b74',
-      dna3: 'caf950b6a434f43ad1ffe4c8c12a8b85',
+      cat: {
+        id: 1,
+        dna: 'f6b950a6a930b48ad1ffe4c8c12a8b91',
+        generation: 0,
+        price: 0.5,
+      },
+      cat2: {
+        id: 2,
+        dna: 'a6b910a6a930b44ad1ca83c8a14a8b74',
+        generation: 0,
+        price: 1.2
+      },
+      cat3: {
+        id: 2,
+        dna: 'caf950b6a434f43ad1ffe4c8c12a8b85',
+        generation: 1,
+        price: 0.24
+      },
       web3: null,
       instance: null,
       user: null,
-      page: 'YOUR_CATS',
+      page: 'MARKETPLACE',
     }
   },
 
@@ -88,8 +118,7 @@ export default {
 
   methods: {
     generateCat() {
-      this.dna = DNA.getRandomCatDna();
-      console.log(this.dna);
+      this.cat.dna = DNA.getRandomCatDna();
       this.$refs.cat.$forceUpdate();
     },
 
@@ -146,8 +175,9 @@ export default {
     color: white;
   }
 
-  .navbar-text {
+  .navbar-dark .navbar-text {
     margin-right: 10px;
+    color: white;
   }
 
   .nav-link {
@@ -161,5 +191,10 @@ export default {
   .wallet {
     margin-left: auto;
     margin-right: 10px;
+  }
+
+  .btn-pink {
+    background-color: deeppink;
+    color: white;
   }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      dna: {{ dna }}
+      token ID: {{ cat.id }}
     </div>
     <div class="card-body">
       <div class="cat">
@@ -52,6 +52,18 @@
         </div>
       </div>
     </div>
+    <div class="card-footer text-muted">
+      <div class="data">
+        dna: {{ cat.dna }}
+        <br>
+        generation: {{ cat.generation }}
+      </div>
+      <div v-if="buy">
+        <br>
+        Price: {{ cat.price }} <img src="../assets/ethereum-logo.png" width="15" height="18" /> &nbsp;&nbsp;&nbsp;
+        <button type="button" class="btn btn-pink buy-button">Buy</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -62,11 +74,15 @@ export default {
   name: 'Cat',
 
   props: {
-    dna: String
+    cat: Object,
+    buy: {
+      type: Boolean,
+      default: false,
+    }
   },
 
   watch: {
-    dna: function() {
+    cat: function() {
       this.drawCat();
     }
   },
@@ -90,7 +106,7 @@ export default {
 
   methods: {
     drawCat() {
-      this.DNA = new DNA(this.dna);
+      this.DNA = new DNA(this.cat.dna);
       this.color1 = this.DNA?.getColor1();
       this.color2 = this.DNA?.getColor2();
       this.color3 = this.DNA?.getColor3();
