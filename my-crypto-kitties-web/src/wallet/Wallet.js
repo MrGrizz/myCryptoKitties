@@ -36,5 +36,9 @@ export const Wallet = {
 
     getMyKittyIds() {
         return Wallet.kittyContractInstance.methods.getMyKittyIds().call({});
+    },
+
+    getKitty(tokenId) {
+        return Wallet.kittyContractInstance.methods.getKitty(tokenId).call({});
     }
 }

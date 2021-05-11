@@ -4,14 +4,8 @@
         <br>
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <Cat ref="cat" :cat="cat" />
-                </div>
-                <div class="col-md-4">
-                    <Cat ref="cat" :cat="cat2" />
-                </div>
-                <div class="col-md-4">
-                    <Cat ref="cat" :cat="cat3" />
+                <div v-for="(kitty, index) in kitties" :key="index" class="col-md-4 mb-5">
+                    <Cat ref="cat" :cat="kitty" />
                 </div>
             </div>
         </div>
@@ -29,25 +23,8 @@
 
         data() {
             return {
-                cat: {
-                    id: 1,
-                    dna: 'f6b950a6a930b48ad1ffe4c8c12a8b91',
-                    generation: 0,
-                    price: 0.5,
-                },
-                cat2: {
-                    id: 2,
-                    dna: 'a6b910a6a930b44ad1ca83c8a14a8b74',
-                    generation: 0,
-                    price: 1.2
-                },
-                cat3: {
-                    id: 2,
-                    dna: 'caf950b6a434f43ad1ffe4c8c12a8b85',
-                    generation: 1,
-                    price: 0.24
-                },
                 kittyIds: [],
+                kitties: [],
             };
         },
 
@@ -61,7 +38,12 @@
             getKittyIds() {
                 Wallet.getMyKittyIds().then((response) => {
                    this.kittyIds = response;
-                   console.log(response);
+                   for (const tokenId of this.kittyIds) {
+                       Wallet.getKitty(tokenId).then((response) => {
+                           response.id = tokenId;
+                           this.kitties.push(response);
+                       });
+                   }
                 });
             }
         }
