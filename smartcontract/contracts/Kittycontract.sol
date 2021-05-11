@@ -146,6 +146,20 @@ contract Kittycontract is IERC721, Ownable {
         return _createKitty(newDna, mumId, dadId, generation, msg.sender);
     }
 
+    function getMyKittyIds() external view returns(uint[] memory) {
+        uint[] memory senderKitties = new uint[](kitties.length);
+        uint index = 0;
+
+        for (uint i = 0; i < kitties.length; i++) {
+            if (_owns(msg.sender, i)) {
+                senderKitties[index] = i;
+                index = index + 1;
+            }
+        }
+
+        return senderKitties;
+    }
+
     function _mixDna(string memory mumDna, string memory dadDna) internal pure returns(string memory) {
         bytes memory mumDnaBytes = bytes(mumDna);
         bytes memory dadDnaBytes = bytes(dadDna);

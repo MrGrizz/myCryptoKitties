@@ -20,6 +20,7 @@
 
 <script>
     import Cat from "../components/Cat";
+    import {Wallet} from "../wallet/Wallet";
 
     export default {
         name: "YourCatsView",
@@ -46,10 +47,24 @@
                     generation: 1,
                     price: 0.24
                 },
+                kittyIds: [],
             };
         },
 
-        methods: {}
+        beforeMount() {
+            if (Wallet.connected) {
+                this.getKittyIds();
+            }
+        },
+
+        methods: {
+            getKittyIds() {
+                Wallet.getMyKittyIds().then((response) => {
+                   this.kittyIds = response;
+                   console.log(response);
+                });
+            }
+        }
     }
 </script>
 

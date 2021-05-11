@@ -25,7 +25,7 @@ export const Wallet = {
     },
 
     createKittyGen0(dna) {
-        Wallet.instance.methods.createKittyGen0(dna).send({}, (error, txHash) => {
+        Wallet.kittyContractInstance.methods.createKittyGen0(dna).send({}, (error, txHash) => {
             if (error) {
                 console.log(error);
             } else {
@@ -33,4 +33,8 @@ export const Wallet = {
             }
         });
     },
+
+    getMyKittyIds() {
+        return Wallet.kittyContractInstance.methods.getMyKittyIds().call({});
+    }
 }
