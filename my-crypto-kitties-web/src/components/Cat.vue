@@ -82,8 +82,11 @@ export default {
   },
 
   watch: {
-    cat: function() {
-      this.drawCat();
+    cat: {
+      handler() {
+        this.drawCat();
+      },
+      deep: true,
     }
   },
 

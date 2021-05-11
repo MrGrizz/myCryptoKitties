@@ -15,14 +15,11 @@
                 </div>
             </div>
         </div>
-        <button type="button" @click="generateCat" class="btn btn-primary">Generate random kitty</button>
-        <button type="button" @click="createCat" class="btn btn-success">Create kitty</button>
     </div>
 </template>
 
 <script>
     import Cat from "../components/Cat";
-    import {DNA} from "../dna/DNA";
 
     export default {
         name: "YourCatsView",
@@ -52,22 +49,7 @@
             };
         },
 
-        methods: {
-            generateCat() {
-                this.cat.dna = DNA.getRandomCatDna();
-                this.$refs.cat.$forceUpdate();
-            },
-
-            createCat() {
-                this.instance.methods.createKittyGen0(this.dna).send({}, (error, txHash) => {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log(txHash);
-                    }
-                });
-            },
-        }
+        methods: {}
     }
 </script>
 

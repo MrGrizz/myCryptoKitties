@@ -16,9 +16,9 @@
           </li>
         </ul>
         <div class="wallet">
-          <span v-if="user" class="navbar-text">
-            Your balance: 50 <img src="./assets/ethereum-logo.png" width="20" height="24" />&nbsp;&nbsp;&nbsp;
-            Connected! {{ user }}
+          <span v-if="connected" class="navbar-text">
+            Balance: {{ balance }} <img src="./assets/ethereum-logo.png" width="20" height="24" />&nbsp;&nbsp;&nbsp;
+            Connected! {{ SmartContract.accountAddress }}
           </span>
           <button v-else type="button" @click="connectWallet" class="btn btn-light">Connect Metamask</button>
         </div>
@@ -31,35 +31,36 @@
 </template>
 
 <script>
-import Web3 from 'web3'
-import {Kittycontract} from "./kittycontract/Kittycontract";
+import {Wallet} from "./wallet/Wallet";
 
 export default {
   name: 'App',
 
-  data() {
-    return {
-      web3: null,
-      instance: null,
-      user: null,
+  watch: {
+    connected: function () {
+      Wallet.getBalance().then((response) => {
+        this.balance = Wallet.web3.utils.fromWei(response, "ether");
+      });
     }
   },
 
-  mounted() {
-    this.web3 = new Web3(Web3.givenProvider);
+  data() {
+    return {
+      SmartContract: Wallet,
+      connected: Wallet.connected,
+      balance: 0,
+    }
+  },
+
+  beforeMount() {
+    Wallet.init();
   },
 
   methods: {
     connectWallet() {
-      window.ethereum.enable().then((accounts) => {
-        this.user = accounts[0];
-        this.instance = new this.web3.eth.Contract(Kittycontract.abi, Kittycontract.address, {from: this.user});
-        this.instance.events.Birth({}).on('data', (event) => {
-          console.log(event);
-        });
-      });
-    },
-  },
+      Wallet.connectWallet(this);
+    }
+  }
 }
 </script>
 
