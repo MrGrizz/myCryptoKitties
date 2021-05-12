@@ -141,7 +141,7 @@ contract Kittycontract is IERC721, Ownable {
         string storage dadDna = kitties[dadId].dna;
 
         string memory newDna = _mixDna(mumDna, dadDna);
-        uint256 generation = (kitties[mumId].generation + kitties[dadId].generation)/2;
+        uint256 generation = (kitties[mumId].generation + kitties[dadId].generation)/2 + 1;
 
         return _createKitty(newDna, mumId, dadId, generation, msg.sender);
     }

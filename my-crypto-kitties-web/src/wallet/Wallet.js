@@ -36,6 +36,10 @@ export const Wallet = {
         });
     },
 
+    breed(dadId, mumId) {
+        return Wallet.kittyContractInstance.methods.breed(dadId, mumId).send({});
+    },
+
     getMyKittyIds() {
         return Wallet.kittyContractInstance.methods.getMyKittyIds().call({});
     },
