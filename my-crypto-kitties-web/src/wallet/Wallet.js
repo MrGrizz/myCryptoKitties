@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 import {Kittycontract} from "../kittycontract/Kittycontract";
+import {emitter} from "../emitter";
 
 export const Wallet = {
     web3: null,
@@ -17,6 +18,7 @@ export const Wallet = {
             Wallet.kittyContractInstance = new Wallet.web3.eth.Contract(Kittycontract.abi, Kittycontract.address, {from: Wallet.accountAddress});
             Wallet.connected = true;
             context.connected = true;
+            emitter.emit('WalletConnected');
         });
     },
 

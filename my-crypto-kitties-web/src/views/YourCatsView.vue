@@ -15,6 +15,7 @@
 <script>
     import Cat from "../components/Cat";
     import {Wallet} from "../wallet/Wallet";
+    import {emitter} from "../emitter";
 
     export default {
         name: "YourCatsView",
@@ -28,14 +29,20 @@
             };
         },
 
+        created() {
+            emitter.on('WalletConnected', () => {
+                this.getKitties();
+            });
+        },
+
         beforeMount() {
             if (Wallet.connected) {
-                this.getKittyIds();
+                this.getKitties();
             }
         },
 
         methods: {
-            getKittyIds() {
+            getKitties() {
                 Wallet.getMyKittyIds().then((response) => {
                    this.kittyIds = response;
                    for (const tokenId of this.kittyIds) {
