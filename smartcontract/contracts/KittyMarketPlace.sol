@@ -7,117 +7,95 @@ import "./Ownable.sol";
 
 contract KittyMarketPlace is IKittyMarketPlace, Ownable {
 
-    address internal kittyContractAddress;
     Kittycontract internal kittycontract;
 
-    struct Order {
+    struct Offer {
         uint tokenId;
         uint price;
         address seller;
         bool active;
     }
 
-    Order[] orders;
+    Offer[] offers;
 
-    mapping(uint => uint) tokenIdToOrderId;
+    mapping(uint => uint) tokenIdToOfferId;
 
-    /**
-    * Set the current KittyContract address and initialize the instance of Kittycontract.
-    * Requirement: Only the contract owner can call.
-     */
+    constructor(address _kittyContractAddress) {
+        kittycontract = Kittycontract(_kittyContractAddress);
+        Offer memory offer = Offer(0, 0, msg.sender, false);
+        offers.push(offer);
+    }
+    
     function setKittyContract(address _kittyContractAddress) override external onlyOwner {
-        kittyContractAddress = _kittyContractAddress;
         kittycontract = Kittycontract(_kittyContractAddress);
     }
 
-    /**
-    * Get the details about a offer for _tokenId. Throws an error if there is no active offer for _tokenId.
-     */
     function getOffer(uint256 _tokenId) override external view returns ( address seller, uint256 price, uint256 index, uint256 tokenId, bool active) {
-        uint orderId = tokenIdToOrderId[_tokenId];
-        Order storage order = orders[orderId];
+        uint offerId = tokenIdToOfferId[_tokenId];
+        Offer storage offer = offers[offerId];
+        
+        require(offer.active, "No active offer for this token");
 
-        seller = order.seller;
-        price = order.price;
-        index = orderId;
+        seller = offer.seller;
+        price = offer.price;
+        index = offerId;
         tokenId = _tokenId;
-        active = order.active;
+        active = offer.active;
     }
 
-    /**
-    * Get all tokenId's that are currently for sale. Returns an empty arror if none exist.
-     */
-    function getAllTokenOnSale() override external view  returns(uint256[] memory listOfOffers) {
-        listOfOffers = uint[];
+    function getAllTokenOnSale() override external view  returns(uint256[] memory) {
+        uint[] memory result = new uint[](offers.length);
 
-        for (uint i = 0; i < orders.length; i++) {
-            Order storage order = orders[i];
+        for (uint i = 0; i < offers.length; i++) {
+            Offer storage offer = offers[i];
 
-            if (order.active) {
-                listOfOffers.push(i);
+            if (offer.active) {
+                result[i] = i;
             }
         }
+
+        return result;
     }
 
-    /**
-    * Creates a new offer for _tokenId for the price _price.
-    * Emits the MarketTransaction event with txType "Create offer"
-    * Requirement: Only the owner of _tokenId can create an offer.
-    * Requirement: There can only be one active offer for a token at a time.
-    * Requirement: Marketplace contract (this) needs to be an approved operator when the offer is created.
-     */
     function setOffer(uint256 _price, uint256 _tokenId) override external {
         require(kittycontract.ownerOf(_tokenId) == msg.sender, "You don't own this token");
+        require(offers[tokenIdToOfferId[_tokenId]].active == false, "Exist active offer for this token");
+        require(kittycontract.getApproved(_tokenId) == owner(), "Marketplace isn't approved operator of this token");
 
-        Order memory order = Order();
-        order.price = _price;
-        order.seller = msg.sender;
-        order.active = true;
-        order.tokenId = _tokenId;
+        Offer memory offer = Offer(_tokenId, _price, msg.sender, true);
 
-        orders.push(order);
-        tokenIdToOrderId[_tokenId] = orders.length - 1;
+        offers.push(offer);
+        tokenIdToOfferId[_tokenId] = offers.length - 1;
 
         emit MarketTransaction("Create offer", msg.sender, _tokenId);
     }
 
-    /**
-    * Removes an existing offer.
-    * Emits the MarketTransaction event with txType "Remove offer"
-    * Requirement: Only the seller of _tokenId can remove an offer.
-     */
     function removeOffer(uint256 _tokenId) override external {
-        uint orderId = tokenIdToOrderId[_tokenId];
-        Order storage order = orders[orderId];
+        uint offerId = tokenIdToOfferId[_tokenId];
+        Offer storage offer = offers[offerId];
 
-        require(msg.sender == order.seller, "You aren't seller of this token");
+        require(msg.sender == offer.seller, "You aren't seller of this token");
 
-        order.active = false;
-        delete tokenIdToOrderId[_tokenId];
+        offer.active = false;
+        delete tokenIdToOfferId[_tokenId];
 
         emit MarketTransaction("Remove offer", msg.sender, _tokenId);
     }
 
-    /**
-    * Executes the purchase of _tokenId.
-    * Sends the funds to the seller and transfers the token using transferFrom in Kittycontract.
-    * Emits the MarketTransaction event with txType "Buy".
-    * Requirement: The msg.value needs to equal the price of _tokenId
-    * Requirement: There must be an active offer for _tokenId
-     */
     function buyKitty(uint256 _tokenId) override external payable {
-        uint orderId = tokenIdToOrderId[_tokenId];
-        Order storage order = orders[orderId];
+        uint offerId = tokenIdToOfferId[_tokenId];
+        Offer storage offer = offers[offerId];
 
-        require(msg.value == order.price, "Value is not equal to price for this token");
+        require(msg.value == offer.price, "Value is not equal to price for this token");
+        require(offer.active, "There isn't active offer for this token");
 
-        (bool sent, ) = order.seller.call{value: msg.value}("");
+        (bool sent, ) = offer.seller.call{value: msg.value}("");
         require(sent);
 
-        kittycontract.transferFrom(order.seller, msg.sender, _tokenId);
+        kittycontract.transferFrom(offer.seller, msg.sender, _tokenId);
 
-        order.active = false;
-        delete tokenIdToOrderId[_tokenId];
+        offer.active = false;
+        delete tokenIdToOfferId[_tokenId];
 
         emit MarketTransaction("Buy", msg.sender, _tokenId);
     }
