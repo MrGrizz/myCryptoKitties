@@ -86,7 +86,7 @@ contract Kittycontract is IERC721, Ownable {
 
     function approve(address _approved, uint256 _tokenId) override external {
         require(_tokenId < kitties.length, "Token doesn't exist");
-        require(_owns(msg.sender, _tokenId), "You don't own this token");
+        require(_isApproved(msg.sender, _tokenId), "You are not authorize to manage this token");
 
         approvals[_tokenId] = _approved;
 
