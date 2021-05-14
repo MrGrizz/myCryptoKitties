@@ -51,6 +51,14 @@ export const Wallet = {
         return Wallet.kittyContractInstance.methods.getKitty(tokenId).call({});
     },
 
+    sell(tokenId, price) {
+        return Wallet.marketplaceInstance.methods.setOffer(price, tokenId).send({});
+    },
+
+    forSale(tokenId) {
+        return Wallet.marketplaceInstance.methods.getOffer(tokenId).call({});
+    },
+
     approveForMarketplace(tokenId) {
         return Wallet.kittyContractInstance.methods.approve(Marketplace.address, tokenId).send({});
     },

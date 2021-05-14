@@ -60,9 +60,9 @@ contract KittyMarketPlace is IKittyMarketPlace, Ownable {
     function setOffer(uint256 _price, uint256 _tokenId) override external {
         require(kittycontract.ownerOf(_tokenId) == msg.sender, "You don't own this token");
         require(offers[tokenIdToOfferId[_tokenId]].active == false, "Exist active offer for this token");
-        require(kittycontract.getApproved(_tokenId) == owner(), "Marketplace isn't approved operator of this token");
+        require(kittycontract.getApproved(_tokenId) == address(this), "Marketplace isn't approved operator of this token");
 
-        Offer memory offer = Offer(_tokenId, _price, msg.sender, true);
+        Offer memory offer = Offer(_tokenId, _price * 1000000000000000000, msg.sender, true);
 
         offers.push(offer);
         tokenIdToOfferId[_tokenId] = offers.length - 1;

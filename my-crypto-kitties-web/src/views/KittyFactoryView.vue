@@ -4,7 +4,7 @@
         <br>
         <div class="row">
             <div class="offset-4 col-md-4">
-                <CatCard ref="cat" :cat="cat" />
+                <CatCard ref="cat" :cat="cat" :readOnly="true" />
                 <br>
                 <button type="button" @click="generateCat" class="btn btn-primary m-1">Generate random kitty</button>
                 <button type="button" @click="createCat" class="btn btn-success">Create kitty</button>

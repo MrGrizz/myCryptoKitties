@@ -22,9 +22,12 @@
           <button v-if="!approvedForMarketplace" type="button"
                   class="btn btn-pink" @click="approveForMarketplace">Approve for sale
           </button>
-          <div v-else>
-            <input type="number"> ETH &nbsp;&nbsp;&nbsp;
-            <button type="button" class="btn btn-pink">Sell</button>
+          <div v-if="approvedForMarketplace && !forSale">
+            <input type="number" v-model="price"> ETH &nbsp;&nbsp;&nbsp;
+            <button :disabled="sellButtonDisabled" type="button" class="btn btn-pink" @click="sell()">Sell</button>
+          </div>
+          <div v-if="forSale">
+            <button type="button" class="btn btn-pink" @click="sell()">Remove offer</button>
           </div>
         </div>
       </div>
@@ -40,6 +43,7 @@ import Cat from "./Cat";
 export default {
   name: 'CatCard',
   components: {Cat},
+
   props: {
     cat: Object,
     buy: {
@@ -52,19 +56,30 @@ export default {
     }
   },
 
+  computed: {
+    sellButtonDisabled() {
+      return this.price === 0;
+    }
+  },
+
   beforeMount() {
-    if (!this.buy) {
+    if (!this.buy && !this.readOnly) {
       Wallet.approvedForMarketplace(this.cat.id).then((response) => {
         this.approvedForMarketplace = response === Marketplace.address;
       });
+      Wallet.forSale(this.cat.id).then(() => {
+        this.forSale = true;
+      }).catch(() => {
+        this.forSale = false;
+      });
     }
-
-    console.log(this.readOnly);
   },
 
   data() {
     return {
-      approvedForMarketplace: null,
+      approvedForMarketplace: false,
+      forSale: false,
+      price: 0,
     }
   },
 
@@ -74,6 +89,14 @@ export default {
         this.approvedForMarketplace = true;
       });
     },
+
+    sell() {
+      if (this.price > 0) {
+        Wallet.sell(this.cat.id, this.price).then(() => {
+          this.forSale = true;
+        });
+      }
+    }
   }
 }
 </script>
