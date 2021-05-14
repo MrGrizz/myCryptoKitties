@@ -15,7 +15,7 @@ export const Wallet = {
     },
 
     connectWallet(context) {
-        window.ethereum.enable().then((accounts) => {
+        Wallet.web3.eth.requestAccounts().then((accounts) => {
             Wallet.accountAddress = accounts[0];
             Wallet.kittyContractInstance = new Wallet.web3.eth.Contract(Kittycontract.abi, Kittycontract.address, {from: Wallet.accountAddress});
             Wallet.marketplaceInstance = new Wallet.web3.eth.Contract(Marketplace.abi, Marketplace.address, {from: Wallet.accountAddress});
@@ -55,8 +55,17 @@ export const Wallet = {
         return Wallet.marketplaceInstance.methods.setOffer(price, tokenId).send({});
     },
 
-    forSale(tokenId) {
-        return Wallet.marketplaceInstance.methods.getOffer(tokenId).call({});
+    buyKitty(tokenId, price) {
+        return Wallet.marketplaceInstance.methods.buyKitty(tokenId)
+            .send({value: Wallet.web3.utils.toWei(price + '', 'gwei')});
+    },
+
+    getOfferIds() {
+        return Wallet.marketplaceInstance.methods.getAllTokenOnSale().call({});
+    },
+
+    getOffer(offerId) {
+        return Wallet.marketplaceInstance.methods.getOffer(offerId).call({});
     },
 
     approveForMarketplace(tokenId) {

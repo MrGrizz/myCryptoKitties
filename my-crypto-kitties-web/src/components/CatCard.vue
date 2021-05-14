@@ -15,8 +15,13 @@
       <div v-if="!readOnly">
         <br>
         <div v-if="buy">
-          Price: {{ cat.price }} <img src="../assets/ethereum-logo.png" width="15" height="18" /> &nbsp;&nbsp;&nbsp;
-          <button type="button" class="btn btn-pink buy-button">Buy</button>
+          <div v-if="!bought">
+            Price: {{ cat.price/1000000000 }} <img src="../assets/ethereum-logo.png" width="15" height="18" /> &nbsp;&nbsp;&nbsp;
+            <button type="button" class="btn btn-pink buy-button" @click="buyKitty()">Buy</button>
+          </div>
+          <div v-else>
+            Done!
+          </div>
         </div>
         <div v-else>
           <button v-if="!approvedForMarketplace" type="button"
@@ -58,7 +63,7 @@ export default {
 
   computed: {
     sellButtonDisabled() {
-      return this.price === 0;
+      return this.cat.price === 0;
     }
   },
 
@@ -67,7 +72,7 @@ export default {
       Wallet.approvedForMarketplace(this.cat.id).then((response) => {
         this.approvedForMarketplace = response === Marketplace.address;
       });
-      Wallet.forSale(this.cat.id).then(() => {
+      Wallet.getOffer(this.cat.id).then(() => {
         this.forSale = true;
       }).catch(() => {
         this.forSale = false;
@@ -80,6 +85,7 @@ export default {
       approvedForMarketplace: false,
       forSale: false,
       price: 0,
+      bought: false,
     }
   },
 
@@ -92,11 +98,17 @@ export default {
 
     sell() {
       if (this.price > 0) {
-        Wallet.sell(this.cat.id, this.price).then(() => {
+        Wallet.sell(this.cat.id, this.price * 1000000000).then(() => {
           this.forSale = true;
         });
       }
-    }
+    },
+
+    buyKitty() {
+      Wallet.buyKitty(this.cat.id, this.cat.price).then(() => {
+        this.bought = true;
+      });
+    },
   }
 }
 </script>

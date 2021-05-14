@@ -1,5 +1,5 @@
 export const Marketplace = {
-    address: '0xDA7aC82aC9A62b1931Cb89090b3D62ca5B4F4C31',
+    address: '0x4B9628D9A6BFaaaBbFa11E4d267c252e67866d61',
     "abi": [
         {
             "inputs": [

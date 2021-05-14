@@ -37,20 +37,20 @@ contract KittyMarketPlace is IKittyMarketPlace, Ownable {
         require(offer.active, "No active offer for this token");
 
         seller = offer.seller;
-        price = offer.price;
+        price = offer.price/1000000000;
         index = offerId;
         tokenId = _tokenId;
         active = offer.active;
     }
 
-    function getAllTokenOnSale() override external view  returns(uint256[] memory) {
+    function getAllTokenOnSale() override external view returns(uint256[] memory) {
         uint[] memory result = new uint[](offers.length);
 
         for (uint i = 0; i < offers.length; i++) {
             Offer storage offer = offers[i];
 
             if (offer.active) {
-                result[i] = i;
+                result[i] = offer.tokenId;
             }
         }
 
@@ -62,7 +62,7 @@ contract KittyMarketPlace is IKittyMarketPlace, Ownable {
         require(offers[tokenIdToOfferId[_tokenId]].active == false, "Exist active offer for this token");
         require(kittycontract.getApproved(_tokenId) == address(this), "Marketplace isn't approved operator of this token");
 
-        Offer memory offer = Offer(_tokenId, _price * 1000000000000000000, msg.sender, true);
+        Offer memory offer = Offer(_tokenId, _price * 1000000000, msg.sender, true);
 
         offers.push(offer);
         tokenIdToOfferId[_tokenId] = offers.length - 1;
@@ -89,9 +89,7 @@ contract KittyMarketPlace is IKittyMarketPlace, Ownable {
         require(msg.value == offer.price, "Value is not equal to price for this token");
         require(offer.active, "There isn't active offer for this token");
 
-        (bool sent, ) = offer.seller.call{value: msg.value}("");
-        require(sent);
-
+        payable(offer.seller).call{value: msg.value}("");
         kittycontract.transferFrom(offer.seller, msg.sender, _tokenId);
 
         offer.active = false;
