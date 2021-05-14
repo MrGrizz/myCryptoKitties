@@ -225,11 +225,11 @@ contract Kittycontract is IERC721, Ownable {
         kittyOwner[tokenId] = to;
         balances[to] += 1;
         if (from != address(0)) {
-            balances[msg.sender] -= 1;
+            balances[from] -= 1;
             delete approvals[tokenId];
         }
 
-        emit Transfer(msg.sender, to, tokenId);
+        emit Transfer(from, to, tokenId);
     }
 
     function _checkAddress(address _from, address _to, uint256 _tokenId, bytes memory data) internal returns(bool) {

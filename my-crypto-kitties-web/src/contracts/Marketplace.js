@@ -1,5 +1,5 @@
 export const Marketplace = {
-    address: '0x4B9628D9A6BFaaaBbFa11E4d267c252e67866d61',
+    address: '0xb9676E3E262E876c3FE31d5DD590e82eDd0ee25c',
     "abi": [
         {
             "inputs": [
@@ -201,6 +201,6 @@ export const Marketplace = {
             "stateMutability": "payable",
             "type": "function",
             "payable": true
-        }
+        },
     ],
 }

@@ -97,5 +97,4 @@ contract KittyMarketPlace is IKittyMarketPlace, Ownable {
 
         emit MarketTransaction("Buy", msg.sender, _tokenId);
     }
-
 }

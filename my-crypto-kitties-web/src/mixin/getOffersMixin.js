@@ -16,19 +16,20 @@ export const getOffersMixin = {
     },
 
     beforeMount() {
-        if (Wallet.connected) {
-            this.getOffers();
-        }
+        this.getOffers();
     },
 
     methods: {
         getOffers() {
+            this.kittyIds = [];
+            this.kitties = [];
+
             Wallet.getOfferIds().then((response) => {
                 this.kittyIds = response;
                 for (const tokenId of this.kittyIds) {
                     if (tokenId != 0) {
-                        console.log(tokenId);
                         Wallet.getOffer(tokenId).then((response) => {
+                            console.log(response);
                             response.id = tokenId;
                             const offer = response;
                             Wallet.getKitty(tokenId).then((response) => {

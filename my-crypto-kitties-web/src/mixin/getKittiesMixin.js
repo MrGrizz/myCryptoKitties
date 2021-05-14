@@ -23,13 +23,18 @@ export const getKittiesMixin = {
 
     methods: {
         getKitties() {
+            this.kittyIds = [];
+            this.kitties = [];
+
             Wallet.getMyKittyIds().then((response) => {
                 this.kittyIds = response;
                 for (const tokenId of this.kittyIds) {
-                    Wallet.getKitty(tokenId).then((response) => {
-                        response.id = tokenId;
-                        this.kitties.push(response);
-                    });
+                    if (tokenId != 0) {
+                        Wallet.getKitty(tokenId).then((response) => {
+                            response.id = tokenId;
+                            this.kitties.push(response);
+                        });
+                    }
                 }
             });
         }

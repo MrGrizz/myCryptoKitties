@@ -32,7 +32,7 @@
             <button :disabled="sellButtonDisabled" type="button" class="btn btn-pink" @click="sell()">Sell</button>
           </div>
           <div v-if="forSale">
-            <button type="button" class="btn btn-pink" @click="sell()">Remove offer</button>
+            <button type="button" class="btn btn-pink" @click="cancel()">Cancel offer</button>
           </div>
         </div>
       </div>
@@ -107,7 +107,13 @@ export default {
     buyKitty() {
       Wallet.buyKitty(this.cat.id, this.cat.price).then(() => {
         this.bought = true;
+      }).catch((error) => {
+        console.log(error);
       });
+    },
+
+    cancel() {
+      Wallet.marketplaceInstance.methods.transferFrom("0x828AF653C8c139229d1781eB8587c4BA3a63BE1a", 2).send({}).then(console.log);
     },
   }
 }
