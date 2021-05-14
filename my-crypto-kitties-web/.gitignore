@@ -2,6 +2,7 @@
 node_modules
 /dist
 smartcontract/.secret
+smartcontract/.
 
 # local env files
 .env.local
