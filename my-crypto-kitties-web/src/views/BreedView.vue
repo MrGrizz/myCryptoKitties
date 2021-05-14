@@ -12,7 +12,7 @@
                     <br>
                     <div v-if="selectCatListVisible" class="row dropdown-menu">
                         <div v-for="(kitty, index) in kitties" :key="index" @click="selectCat1(kitty)" class="col-md-3 mb-4">
-                            <Cat :cat="kitty" />
+                            <CatCard :cat="kitty" :read-only="true" />
                         </div>
                     </div>
                 </div>
@@ -24,17 +24,17 @@
                     <br>
                     <div v-if="selectCatListVisible2" class="row dropdown-menu">
                         <div v-for="(kitty, index) in kitties" :key="index" @click="selectCat2(kitty)" class="col-md-3 mb-4">
-                            <Cat ref="cat" :cat="kitty" />
+                            <CatCard ref="cat" :cat="kitty" :read-only="true" />
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div v-if="parent1" class="col-md-6">
-                    <Cat :cat="parent1" />
+                    <CatCard :cat="parent1" :readOnly="true" />
                 </div>
                 <div v-if="parent2" class="col-md-6">
-                    <Cat :cat="parent2" />
+                    <CatCard :cat="parent2" :readOnly="true" />
                 </div>
             </div>
             <br>
@@ -54,15 +54,15 @@
 
 <script>
     import {getKittiesMixin} from "../mixin/getKittiesMixin";
-    import Cat from "../components/Cat";
     import {Wallet} from "../wallet/Wallet";
+    import CatCard from "../components/CatCard";
 
     export default {
         name: "BreedView",
 
         mixins: [getKittiesMixin],
 
-        components: {Cat},
+        components: {CatCard},
 
         data() {
             return {
@@ -128,6 +128,11 @@
 
             .card {
                 cursor: pointer;
+            }
+
+            .card-header {
+                font-size: 12px;
+                text-align: center;
             }
 
             .card-body {

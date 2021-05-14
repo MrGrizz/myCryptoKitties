@@ -14,7 +14,7 @@
             </div>
             <div class="row">
                 <div v-for="(kitty, index) in kitties" :key="index" class="col-md-4 mb-5">
-                    <Cat ref="cat" :cat="kitty" />
+                    <CatCard ref="cat" :cat="kitty" />
                 </div>
             </div>
         </div>
@@ -22,15 +22,15 @@
 </template>
 
 <script>
-    import Cat from "../components/Cat";
     import {getKittiesMixin} from "../mixin/getKittiesMixin";
+    import CatCard from "../components/CatCard";
 
     export default {
         name: "YourCatsView",
 
         mixins: [getKittiesMixin],
 
-        components: {Cat},
+        components: {CatCard},
     }
 </script>
 

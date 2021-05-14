@@ -5,13 +5,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <Cat ref="cat" :cat="cat" :buy="true" />
+                    <CatCard ref="cat" :cat="cat" :buy="true" />
                 </div>
                 <div class="col-md-4">
-                    <Cat ref="cat" :cat="cat2" :buy="true" />
+                    <CatCard ref="cat" :cat="cat2" :buy="true" />
                 </div>
                 <div class="col-md-4">
-                    <Cat ref="cat" :cat="cat3" :buy="true" />
+                    <CatCard ref="cat" :cat="cat3" :buy="true" />
                 </div>
             </div>
         </div>
@@ -20,12 +20,12 @@
 </template>
 
 <script>
-    import Cat from "../components/Cat";
+    import CatCard from "../components/CatCard";
 
     export default {
         name: "MarketplaceView",
 
-        components: {Cat},
+        components: {CatCard},
 
         data() {
             return {
