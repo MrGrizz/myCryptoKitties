@@ -4,7 +4,9 @@
       token ID: {{ cat.id }}
     </div>
     <div class="card-body">
-      <Cat :cat="cat" />
+      <router-link :to="{name: 'Cat', params: {id: cat.id}}">
+        <Cat :cat="cat" />
+      </router-link>
     </div>
     <div class="card-footer text-muted">
       <div class="data">
@@ -102,6 +104,10 @@ export default {
           this.forSale = true;
         });
       }
+    },
+
+    removeOffer() {
+      Wallet.removeOffer(this.cat.id);
     },
 
     buyKitty() {

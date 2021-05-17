@@ -78,7 +78,11 @@ export const Wallet = {
         return Wallet.kittyContractInstance.methods.getApproved(tokenId).call({});
     },
 
-    transferFrom(from, to, tokenId) {
-        Wallet.kittyContractInstance.methods.transferFrom(from, to, tokenId).send({});
-    }
+    removeOffer(tokenId) {
+        return Wallet.marketplaceInstance.methods.removeOffer(tokenId).send({});
+    },
+
+    ownerOf(tokenId) {
+        return Wallet.kittyContractInstance.methods.ownerOf(tokenId).call({});
+    },
 }
