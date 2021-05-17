@@ -6,12 +6,12 @@ import CatView from "./views/CatView";
 
 export const routes = [
     {
-        path: '/',
+        path: '/your-cats',
         name: 'YourCats',
         component: YourCatsView,
     },
     {
-        path: '/marketplace',
+        path: '/',
         name: 'Marketplace',
         component: MarketplaceView,
     },
