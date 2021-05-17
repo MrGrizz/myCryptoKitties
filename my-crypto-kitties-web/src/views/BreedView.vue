@@ -12,7 +12,7 @@
                     <br>
                     <div v-if="selectCatListVisible" class="row dropdown-menu">
                         <div v-for="(kitty, index) in kitties" :key="index" @click="selectCat1(kitty)" class="col-md-3 mb-4">
-                            <CatCard :cat="kitty" :read-only="true" />
+                            <CatCard :cat="kitty" :read-only="true" :link="false" />
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                     <br>
                     <div v-if="selectCatListVisible2" class="row dropdown-menu">
                         <div v-for="(kitty, index) in kitties" :key="index" @click="selectCat2(kitty)" class="col-md-3 mb-4">
-                            <CatCard ref="cat" :cat="kitty" :read-only="true" />
+                            <CatCard ref="cat" :cat="kitty" :read-only="true" :link="false" />
                         </div>
                     </div>
                 </div>

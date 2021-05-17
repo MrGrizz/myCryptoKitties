@@ -4,9 +4,10 @@
       token ID: {{ cat.id }}
     </div>
     <div class="card-body">
-      <router-link :to="{name: 'Cat', params: {id: cat.id}}">
+      <router-link v-if="link" :to="{name: 'Cat', params: {id: cat.id}}">
         <Cat :cat="cat" />
       </router-link>
+      <Cat v-else :cat="cat" />
     </div>
     <div class="card-footer text-muted">
       <div class="data">
@@ -60,6 +61,10 @@ export default {
     readOnly: {
       type: Boolean,
       default: false,
+    },
+    link: {
+      type: Boolean,
+      default: true,
     }
   },
 
@@ -119,7 +124,9 @@ export default {
     },
 
     cancel() {
-      Wallet.marketplaceInstance.methods.transferFrom("0x828AF653C8c139229d1781eB8587c4BA3a63BE1a", 2).send({}).then(console.log);
+      Wallet.marketplaceInstance.methods.removeOffer(this.cat.id).send({}).then(() => {
+        this.forSale = false;
+      });
     },
   }
 }
