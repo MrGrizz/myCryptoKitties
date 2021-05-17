@@ -160,35 +160,41 @@ contract Kittycontract is IERC721, Ownable {
         return senderKitties;
     }
 
-    function _mixDna(string memory mumDna, string memory dadDna) internal pure returns(string memory) {
+    function _mixDna(string memory mumDna, string memory dadDna) internal view returns(string memory) {
         bytes memory mumDnaBytes = bytes(mumDna);
         bytes memory dadDnaBytes = bytes(dadDna);
         bytes memory result = new bytes(32);
 
-        for (uint i = 0; i < 6; i++) {
-            result[i] = mumDnaBytes[i];
-        }
+        result = _copy(_getRandomNumber() % 2 == 1 ? mumDnaBytes : dadDnaBytes, result, 0, 6);
+        result = _copy(_getRandomNumber() % 3 % 2 == 1 ? mumDnaBytes : dadDnaBytes, result, 6, 12);
+        result = _copy(_getRandomNumber() % 5 % 2 == 1 ? mumDnaBytes : dadDnaBytes, result, 12, 18);
+        result = _copy(_getRandomNumber() % 8 % 2 == 1 ? mumDnaBytes : dadDnaBytes, result, 18, 24);
+        result = _copy(_getRandomNumber() % 13 % 2 == 1 ? mumDnaBytes : dadDnaBytes, result, 24, 30);
 
-        for (uint i = 6; i < 12; i++) {
-            result[i] = dadDnaBytes[i];
-        }
+        result[30] = _getRandomNumber() % 21 % 2 == 1 ? mumDnaBytes[30] : dadDnaBytes[30];
+        result[31] = _getRandomNumber() % 34 % 2 == 1 ? mumDnaBytes[31] : dadDnaBytes[31];
 
-        for (uint i = 12; i < 18; i++) {
-            result[i] = dadDnaBytes[i];
-        }
+        uint randomColorAttributes1 = _getRandomNumber() % 5;
+        result = _copy(_getRandomNumber() % 55 % 2 == 1 ? mumDnaBytes : dadDnaBytes, result, randomColorAttributes1 * 6, (randomColorAttributes1 + 1) * 6 - 4);
+        result = _copy(_getRandomNumber() % 89 % 2 == 1 ? mumDnaBytes : dadDnaBytes, result, randomColorAttributes1 * 6 + 2, (randomColorAttributes1 + 1) * 6 - 2);
+        result = _copy(_getRandomNumber() % 144 % 2 == 1 ? mumDnaBytes : dadDnaBytes, result, randomColorAttributes1 * 6 + 4, (randomColorAttributes1 + 1) * 6 - 1);
+        result = _copy(_getRandomNumber() % 233 % 2 == 1 ? mumDnaBytes : dadDnaBytes, result, randomColorAttributes1 * 6 + 5, (randomColorAttributes1 + 1) * 6);
 
-        for (uint i = 18; i < 24; i++) {
-            result[i] = dadDnaBytes[i];
-        }
-
-        for (uint i = 24; i < 30; i++) {
-            result[i] = mumDnaBytes[i];
-        }
-
-        result[30] = dadDnaBytes[30];
-        result[31] = mumDnaBytes[31];
+        uint randomColorAttributes2 = _getRandomNumber() % 144 % 5;
+        result = _copy(_getRandomNumber() % 55 % 2 == 0 ? mumDnaBytes : dadDnaBytes, result, randomColorAttributes2 * 6, (randomColorAttributes2 + 1) * 6 - 4);
+        result = _copy(_getRandomNumber() % 89 % 2 == 0 ? mumDnaBytes : dadDnaBytes, result, randomColorAttributes2 * 6 + 2, (randomColorAttributes2 + 1) * 6 - 2);
+        result = _copy(_getRandomNumber() % 144 % 2 == 0 ? mumDnaBytes : dadDnaBytes, result, randomColorAttributes2 * 6 + 4, (randomColorAttributes2 + 1) * 6 - 1);
+        result = _copy(_getRandomNumber() % 233 % 2 == 0 ? mumDnaBytes : dadDnaBytes, result, randomColorAttributes2 * 6 + 5, (randomColorAttributes2 + 1) * 6);
 
         return string(result);
+    }
+
+    function _copy(bytes memory source, bytes memory result, uint from, uint to) internal pure returns(bytes memory) {
+        for (uint i = from; i < to; i++) {
+            result[i] = source[i];
+        }
+
+        return result;
     }
 
     function _createKitty(
@@ -241,6 +247,10 @@ contract Kittycontract is IERC721, Ownable {
         bytes4 result = receiver.onERC721Received(msg.sender, _from, _tokenId, data);
 
         return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)")) == result;
+    }
+
+    function _getRandomNumber() internal view returns(uint) {
+        return block.timestamp;
     }
 
     function _isSmartContract(address _to) internal view returns(bool) {

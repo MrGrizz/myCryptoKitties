@@ -89,7 +89,9 @@ contract KittyMarketPlace is IKittyMarketPlace, Ownable {
         require(msg.value == offer.price, "Value is not equal to price for this token");
         require(offer.active, "There isn't active offer for this token");
 
-        payable(offer.seller).call{value: msg.value}("");
+        (bool sent, ) = payable(offer.seller).call{value: msg.value}("");
+        require(sent);
+
         kittycontract.transferFrom(offer.seller, msg.sender, _tokenId);
 
         offer.active = false;
