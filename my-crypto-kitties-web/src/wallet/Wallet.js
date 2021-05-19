@@ -11,7 +11,7 @@ export const Wallet = {
     connected: false,
 
     init() {
-        Wallet.web3 = new Web3(Web3.givenProvider);
+        Wallet.web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.infura.io/v3/a65e3db141574f578f56c4d2f23f98f3"));
         Wallet.marketplaceInstance = new Wallet.web3.eth.Contract(Marketplace.abi, Marketplace.address);
         Wallet.kittyContractInstance = new Wallet.web3.eth.Contract(Kittycontract.abi, Kittycontract.address);
     },
